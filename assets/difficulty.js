@@ -54,22 +54,26 @@ document.addEventListener('DOMContentLoaded', () => {
       const injectDifficultyBars = () => {
 
         // attempt to inject to challenge buttons
-        const challengeButtons = document.querySelectorAll('.challenge-button');
+        // core theme: button.challenge-button (id in value)
+        // modern theme: div.challenge-card-matrix (id in data-challenge-id)
+        const challengeButtons = document.querySelectorAll('.challenge-button, .challenge-card-matrix[data-challenge-id]');
         challengeButtons.forEach(btn => {
           if (btn.querySelector('.diff-container')) return;
 
-          const chalId = btn.value;
+          const chalId = btn.value || btn.dataset.challengeId;
           const activeBars = parseInt(entries[chalId]) || 0;
 
           if (activeBars > 0) {
             const container = createBarContainer(activeBars, false);
-            btn.appendChild(container);
+            const target = btn.querySelector('.card-content') || btn;
+            target.appendChild(container);
           }
         });
 
         // attempt to inject to challenge modals
         const chalIdInput = document.querySelector('#challenge-id');
-        const chalDesc = document.querySelector('.challenge-desc');
+        const chalDesc = document.querySelector('.challenge-desc')
+                      || document.querySelector('.challenge-description');
 
         if (chalIdInput && chalDesc) {
           const modalChalId = chalIdInput.value;
